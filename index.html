@@ -1,0 +1,222 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <title>MedGen3D</title>
+  <link rel="stylesheet" href="./bootstrap.min.css">
+  <link rel="stylesheet" href="./temp.css">
+  <link rel="stylesheet" href="./MedGen3D_style.css">
+</head>
+
+
+<body data-gr-c-s-loaded="true" data-new-gr-c-s-check-loaded="14.1043.0" data-gr-ext-installed="">
+
+  <!-- <span style='color:red;'>UNI</span><span style='color:blue;'>QUE</span>: Universal Image Segmentation with Contrastive Query Transformer -->
+
+<div class="container">
+  <table border="0" align="center">
+    <tbody><tr>
+      <td width="1500" height="80" align="center" valign="middle">
+      <span class="title"><h1 style="font-size:32px">MedGen3D: A Deep Generative Framework for Paired 3D Image and Mask Generation</h1></td>
+    </tr>
+    
+    <tr>
+        <td colspan="3" align="center"><h4 style="font-size:20px">
+            <a>Kun Han<sup>1</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>Yifeng Xiong<sup>1</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>Chenyu You<sup>2</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>Pooya Khosravi<sup>1</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>shanlin sun<sup>1</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>Xiangyi Yan<sup>1</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>James Duncan<sup>2</sup></a>  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+            <a>Xiaohui Xie<sup>1</sup></a> 
+        </h4></td>
+    </tr>
+    <tr>
+        <td colspan="3" height="30" align="center"><h6> 
+          <sup>1</sup> University of California, Irvine &nbsp; &nbsp;   
+          <sup>2</sup> Yale University &nbsp; &nbsp;
+        </h6> </td>
+    </tr>
+    <br>
+    
+    <tr>
+      <td colspan="3" align="center"><h5><div class="row justify-content-center" align="center" >
+        <!-- <a href="https://arxiv.org/abs/2211.06220" target="_blank"> 
+          <div class="img-with-text">
+            <img src="./oneformer_paper.png" height="100px" /><br><br>
+            <p style="font-size: 16px">ArXiv <br> Paper</p>
+          </div>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+        <a href="https://github.com/SHI-Labs/OneFormer" target="_blank"> 
+          <div class="img-with-text">
+            <img src="./github_icon.png" height="100px" /><br><br>
+            <p style="font-size: 16px">GitHub <br> Code</p>
+          </div>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <a href="https://huggingface.co/spaces/shi-labs/OneFormer" target="_blank"> 
+          <div class="img-with-text">
+            <img src="./huggingface_logo.svg" height="100px" /><br><br>
+            <p style="font-size: 16px">HuggingFace <br> Space</p>
+          </div>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <a href="https://colab.research.google.com/github/SHI-Labs/OneFormer/blob/main/colab/oneformer_colab.ipynb" target="_blank"> 
+          <div class="img-with-text">
+            <img src="./colab_icon.png" height="100px" /><br><br>
+            <p style="font-size: 16px">Colab <br> Demo</p>
+          </div>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <a href="#BibTeX" target="_self"> 
+          <div class="img-with-text">
+            <img src="./bibtex.png" height="100px" /><br><br>
+            <p style="font-size: 16px">Citation <br> BibTeX</p>
+          </div>
+        </a> -->
+      
+      </div></h5></td>
+  </tr>
+  </tbody></table>
+
+  
+
+  <br>
+  <div class="text" style="text-align: left;">
+    <p><img src="./overview.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" align="center"></p>
+      <h2 style="font-size: 26px; text-align: center">Abstract</h2>
+      <p>Acquiring and annotating sufficient labeled data is crucial in developing accurate and robust learning-based models, but obtaining such data can be challenging in many medical image segmentation tasks. One promising solution is to synthesize realistic data with ground-truth mask annotations. However, no prior studies have explored generating complete 3D volumetric images with masks. In this paper, we present MedGen3D, a deep generative framework that can generate paired 3D medical images and masks. First, we represent the 3D medical data as 2D sequences and propose the Multi-Condition Diffusion Probabilistic Model (MC-DPM) to generate multi-label mask sequences adhering to anatomical geometry. Then, we use an image sequence generator and semantic diffusion refiner conditioned on the generated mask sequences to produce realistic 3D medical images that align with the generated masks. Our proposed framework guarantees accurate alignment between synthetic images and segmentation maps. Experiments on 3D thoracic CT and brain MRI datasets show that our synthetic data is both diverse and faithful to the original data, and demonstrate the benefits for downstream segmentation tasks. We anticipate that MedGen3D's ability to synthesize paired 3D medical images and masks will prove valuable in training deep learning models for medical imaging tasks.</p>
+  </div>
+</div>
+
+<br>
+
+<div class="container">
+  <h2 style="font-size: 34px">Method</h2>
+  <p>Overview of the proposed <b>MedGen3D</b>, including a <b>3D mask generator</b> to 
+    autoregressively generate the mask sequences starting from a random position <i>z</i>, 
+    and a <b>conditional image generator</b> to generate 3D images conditioned on generated masks.</p>
+    <h3 style="font-size: 20px">3D Mask Generator</h2>
+    <p><img src="./mcdpm.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+    <div class="overview">
+    <p>
+      Given target position <i>z</i>, MC-DPM is designed to generate mask subsequences 
+      (length of <i>m</i>) for specific region,  unconditionally or conditioning on first or last
+       <i>n</i> slices, according to the pre-defined probability. Binary indicators are assigned 
+       to slices to signify the conditional slices. We ignore the binary indicators in the 
+       inference process for clear visualization with red outline denoting the conditional 
+       slices and green outline denoting the generated slices.
+    </p>
+    </div>
+    <h3 style="font-size: 20px">Conditional Image Generator</h2>
+      <p><img src="./img_gen.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+      <div class="overview">
+      <p>
+        Given the generated 3D mask, the initial image is generated by Vid2Vid model sequentially. 
+        To utilize the semantic diffusion model (SDM) to refine the initial result, we first apply 
+        small steps (10 steps) noise, and then use three SDMs to refine. The final result is the 
+        mean 3D images from 3 different views (Axial, Coronal, and Sagittal), yielding significant
+         improvements over the initially generated image.
+      </p>
+    </div>
+</div>
+
+<br>
+
+
+<div class="container">
+  <h2 style="font-size: 34px">Visualization</h2>
+    <div class="pipelines" style="text-align: left;">
+    <p>
+      We experiment on 3d Brain and Thoracic datasets. By using only limited 3D real data, our model is able to generate realistic and diverse 3D paired image and mask data. 
+    </p>
+  </div>
+  
+    <h3 style="font-size: 20px">3D Thoracic CT Generation</h2>
+    <div align="center">
+      
+        <img src="./thorax_ct_1.gif" style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_2.gif" style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_3.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_4.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_5.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_6.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_7.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./thorax_ct_8.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+    </div>
+
+    <h3 style="font-size: 20px">3D Brain MRI Generation</h2>
+
+      <div align="center">
+        <img src="./brain_mri_1.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_2.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_3.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_4.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_5.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_6.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_7.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+        <br>
+        <img src="./brain_mri_8.gif"  style="display: block;margin-left: auto;margin-right: auto; width:400px;height:200px;" class="center">
+      </div>
+    
+    
+</div>
+
+<br>
+
+<div class="container">
+  <h2 style="font-size: 34px">Evaluation</h2>
+  <p>We compare the quality of the synthetic data with other generative models and  also demonstrate the benefit brought by the paired synthetic data in the medical image segmentation task.</p>
+    <h3 style="font-size: 20px">Image Quality Comparison</h2>
+    <p><img src="./E1.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+    
+    <h3 style="font-size: 20px">3D Medical Segmentation</h2>
+      <p><img src="./E2-1.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+      <p><img src="./E2-2.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+      
+    <h3 style="font-size: 20px">Transfer Learning using limited data on new Datasets</h2>
+      <p><img src="./E3.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+      <p><img src="./E2-2.png" style="display: block;margin-left: auto;margin-right: auto;max-width:100%" class="center"></p>
+      
+</div>
+
+<br>
+
+<!-- </p></div></div><br> -->
+
+<!-- <div class="container" id="BibTeX">
+  <h2 style="font-size: 26px">Citation</h2>
+  <p>If you found OneFormer useful in your research, please consider starring ⭐ us on GitHub and citing 📚 us in your research!</p>
+  <div style="font-weight:normal; background-color:  #F0F0F0;">
+    <tt>
+    @inproceedings{jain2022oneformer, <br>
+      <div style="margin-left: 5%; font-weight:normal; ">
+      title={{OneFormer: One Transformer to Rule Universal Image Segmentation}}, <br>
+      author={Jitesh Jain and Jiachen Li and MangTik Chiu and Ali Hassani and Nikita Orlov and Humphrey Shi}, <br>
+      journal={CVPR}, <br>
+      year={2023} <br>
+    </div>
+    &nbsp;&nbsp;&nbsp;}</tt>
+  </div>
+</div> -->
+
+</p></div></div><br>
+  
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
